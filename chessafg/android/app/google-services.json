@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "6487545702",
+    "project_id": "chessafg",
+    "storage_bucket": "chessafg.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:6487545702:android:8169c6b1789c6d4ba15aa7",
+        "android_client_info": {
+          "package_name": "com.example.chessafg"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBMbuNWpKd41e7ajKv2shmLZucN_Wlfj-E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

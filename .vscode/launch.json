@@ -1,0 +1,28 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "chessafg",
+            "cwd": "chessafg",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "chessafg (profile mode)",
+            "cwd": "chessafg",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "chessafg (release mode)",
+            "cwd": "chessafg",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release"
+        }
+    ]
+}
