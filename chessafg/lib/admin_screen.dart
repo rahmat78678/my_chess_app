@@ -75,9 +75,9 @@ class _AdminScreenState extends State<AdminScreen> {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('News posted successfully!')));
       } else {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Failed to get image URL.')));
-        print('Image URL is null');
       }
     } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Failed to post news: $e')));
       print('Failed to post news: $e');
     }
   }

@@ -7,6 +7,7 @@ import 'package:chessafg/models/user_model.dart';
 import 'package:chessafg/provider/atuntication_provider.dart';
 import 'package:chessafg/provider/game_provider.dart';
 import 'package:chessafg/service/assets_manager.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_stockfish_plugin/stockfish.dart';
 import 'package:flutter_stockfish_plugin/stockfish_state.dart';
@@ -36,12 +37,19 @@ class _GameScreenState extends State<GameScreen> {
     }
     super.initState();
   }
+  
 
   @override
-  void dispose() {
+  void dispose()async {
     stockfish.dispose();
+    //  final gameProvider = context.read<GameProvider>();
+    // await FirebaseFirestore.instance
+    //     .collection(Constants.runningGames).doc(gameProvider.getgameId())
+    //     .collection(Constants.game)
+    //     .doc(gameProvider.getgameId()).delete();
     super.dispose();
   }
+  
 
   void letOtherPlayerPlayFirst() {
     // wait for widget to rebuild

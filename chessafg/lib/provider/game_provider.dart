@@ -33,6 +33,10 @@ class GameProvider extends ChangeNotifier {
   String _gameId = '';
 
   String get gameId => _gameId;
+  String getgameId(){
+    
+    return _gameId;
+  }
 
   Duration _whitesTime = Duration.zero;
   Duration _blacksTime = Duration.zero;
@@ -391,6 +395,10 @@ class GameProvider extends ChangeNotifier {
             onPressed: () {
               Navigator.of(context).pop(true);
               // reset the game
+              Navigator.pushNamedAndRemoveUntil(
+                context,
+                Constants.homeScreen,
+                (route) => false,);
             },
             child: const Text(
               'New Game',

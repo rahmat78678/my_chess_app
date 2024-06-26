@@ -32,19 +32,48 @@ class AuthenticationProvider extends ChangeNotifier {
   final FirebaseStorage firebaseStorage = FirebaseStorage.instance;
 
   // create user with email and password
+  // Future<UserCredential?> createUserWithEmailAndPassword({
+  //   required String email,
+  //   required String password,
+  // }) async {
+  //   _isLoading = true;
+  //   notifyListeners();
+  //   UserCredential userCredential = await firebaseAuth
+  //       .createUserWithEmailAndPassword(email: email, password: password);
+  //   _uid = userCredential.user!.uid;
+  //   notifyListeners();
+
+  //   return userCredential;
+  // }
+
   Future<UserCredential?> createUserWithEmailAndPassword({
-    required String email,
-    required String password,
-  }) async {
-    _isLoading = true;
-    notifyListeners();
+  required String email,
+  required String password,
+}) async {
+  _isLoading = true;
+  notifyListeners();
+
+  try {
     UserCredential userCredential = await firebaseAuth
         .createUserWithEmailAndPassword(email: email, password: password);
     _uid = userCredential.user!.uid;
     notifyListeners();
-
     return userCredential;
+  } on FirebaseAuthException catch (e) {
+    if (e.code == 'email-already-in-use') {
+      // Handle the specific error for email already in use
+      print('The email address is already in use by another account.');
+    } else {
+      // Handle other FirebaseAuthExceptions
+      print('An error occurred: ${e.message}');
+    }
+  } finally {
+    _isLoading = false;
+    notifyListeners();
   }
+  return null;
+}
+
 
   // sign in user with email and password
 Future<UserCredential?> signInUserWithEmailAndPassword({
@@ -76,31 +105,48 @@ Future<UserCredential?> signInUserWithEmailAndPassword({
     }
   }
 
-  // Future<UserCredential?> signInUserWithEmailAndPassword({
-  //   required String email,
-  //   required String password,
-  // }) async {
-  //   _isLoading = true;
-  //   notifyListeners();
-  //   UserCredential userCredential = await firebaseAuth
-  //       .signInWithEmailAndPassword(email: email, password: password);
-  //   _uid = userCredential.user!.uid;
-  //   notifyListeners();
-
-  //   return userCredential;
-  // }
-
   // check if user exist
-  Future<bool> checkUserExist() async {
-    DocumentSnapshot documentSnapshot =
-        await firebaseFirestore.collection(Constants.users).doc(uid).get();
+  Future<bool> checkUserExist({int maxRetries = 5, int initialDelayMs = 1000}) async {
+  int attempt = 0;
+  int delay = initialDelayMs;
 
-    if (documentSnapshot.exists) {
-      return true;
-    } else {
-      return false;
+  while (attempt < maxRetries) {
+    try {
+      DocumentSnapshot documentSnapshot =
+          await FirebaseFirestore.instance.collection('users').doc(uid).get();
+
+      if (documentSnapshot.exists) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      attempt++;
+      if (attempt >= maxRetries) {
+        rethrow;
+      }
+      if (e is FirebaseException && e.code == 'unavailable') {
+        // Wait before retrying
+        await Future.delayed(Duration(milliseconds: delay));
+        delay *= 2; // Exponential backoff
+      } else {
+        rethrow;
+      }
     }
   }
+  return false;
+}
+  
+  // Future<bool> checkUserExist() async {
+  //   DocumentSnapshot documentSnapshot =
+  //       await firebaseFirestore.collection(Constants.users).doc(uid).get();
+
+  //   if (documentSnapshot.exists) {
+  //     return true;
+  //   } else {
+  //     return false;
+  //   }
+  // }
 
   // get user data from firestore
   Future getUserDataFromFireStore() async {

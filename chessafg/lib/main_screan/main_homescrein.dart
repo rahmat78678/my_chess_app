@@ -1,15 +1,11 @@
-import 'package:chessafg/Previous-games-screen.dart';
 import 'package:chessafg/halper/halper_metods.dart';
+//import 'package:chessafg/main.dart';
 import 'package:chessafg/main_screan/about_screan.dart';
 import 'package:chessafg/main_screan/gametime_screaan.dart';
 import 'package:chessafg/main_screan/settings_screan.dart';
+import 'package:chessafg/main_screan/user_data_screen.dart';
 import 'package:chessafg/provider/game_provider.dart';
 import 'package:flutter/material.dart';
-// import 'package:flutter_chess/helper/helper_methods.dart';
-// import 'package:flutter_chess/main_screens/about_screen.dart';
-// import 'package:flutter_chess/main_screens/game_time_screen.dart';
-// import 'package:flutter_chess/main_screens/settings_screen.dart';
-// import 'package:flutter_chess/providers/game_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:chessafg/homescreenn.dart';
 
@@ -28,7 +24,7 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         backgroundColor: Colors.blue,
         title: const Text(
-          'Flutter Chess',
+          'Afghanistan Chess',
           style: TextStyle(color: Colors.white),
         ),
       ),
@@ -54,7 +50,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             buildGameType(
               lable: 'Play vs Friend',
-              icon: Icons.person,
+              icon: Icons.group,
               onTap: () {
                 gameProvider.setVsComputer(value: false);
                 // navigate to setup game time screen
@@ -74,7 +70,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const SettingsScreen(),
+                    builder: (context) => SettingsScreen(),
                   ),
                 );
               },
@@ -87,14 +83,14 @@ class _HomeScreenState extends State<HomeScreen> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const AboutScreen(),
+                    builder: (context) => AboutScreen(),
                   ),
                 );
               },
             ),
              buildGameType(
               lable: 'news',
-              icon: Icons.info,
+              icon: Icons.newspaper,
               onTap: () {
                 // navigate to about screen
                 Navigator.push(
@@ -106,18 +102,21 @@ class _HomeScreenState extends State<HomeScreen> {
               },
               
             ),
-            //  buildGameType(
-            //   lable: 'pri',
-            //   icon: Icons.info,
-            //   onTap: () {
-            //     // navigate to about screen
-            //     Navigator.push(
-            //       context,
-            //       MaterialPageRoute(
-            //         builder: (context) => PreviousGamesScreen(),
-            //       ),
-            //     );
-            //   },),
+              buildGameType(
+              lable: 'profile',
+              icon: Icons.person,
+              onTap: () {
+                // navigate to about screen
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => UserDataScreen(),
+                  ),
+                );
+              },
+              
+            ),
+            
           ],
         ),
       ),

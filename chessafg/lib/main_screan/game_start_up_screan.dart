@@ -288,26 +288,55 @@ class _GameStartUpScreenState extends State<GameStartUpScreen> {
         } else {
           // search for players
           gameProvider.searchPlayer(
-              userModel: userModel!,
-              onSuccess: () {
-                if (gameProvider.waitingText == Constants.searchingPlayerText) {
-                  gameProvider.checkIfOpponentJoined(
-                    userModel: userModel,
-                    onSuccess: () {
-                      gameProvider.setIsLoading(value: false);
-                      Navigator.pushNamed(context, Constants.gameScreen);
-                    },
-                  );
-                } else {
-                  gameProvider.setIsLoading(value: false);
-                  // navigate to gameScreen
-                  Navigator.pushNamed(context, Constants.gameScreen);
-                }
-              },
-              onFail: (error) {
-                gameProvider.setIsLoading(value: false);
-                showSnackBar(context: context, content: error);
-              });
+  userModel: userModel!,
+  onSuccess: () {
+    if (gameProvider.waitingText == Constants.searchingPlayerText) {
+      gameProvider.checkIfOpponentJoined(
+        userModel: userModel,
+        onSuccess: () {
+          if (mounted) {
+            gameProvider.setIsLoading(value: false);
+            Navigator.pushNamed(context, Constants.gameScreen);
+          }
+        },
+      );
+    } else {
+      if (mounted) {
+        gameProvider.setIsLoading(value: false);
+        Navigator.pushNamed(context, Constants.gameScreen);
+      }
+    }
+  },
+  onFail: (error) {
+    if (mounted) {
+      gameProvider.setIsLoading(value: false);
+      showSnackBar(context: context, content: error);
+    }
+  },
+);
+
+
+          // gameProvider.searchPlayer(
+          //     userModel: userModel!,
+          //     onSuccess: () {
+          //       if (gameProvider.waitingText == Constants.searchingPlayerText) {
+          //         gameProvider.checkIfOpponentJoined(
+          //           userModel: userModel,
+          //           onSuccess: () {
+          //             gameProvider.setIsLoading(value: false);
+          //             Navigator.pushNamed(context, Constants.gameScreen);
+          //          },
+          //         );
+          //       } else {
+          //         gameProvider.setIsLoading(value: false);
+          //         // navigate to gameScreen
+          //         Navigator.pushNamed(context, Constants.gameScreen);
+          //       }
+          //     },
+          //     onFail: (error) {
+          //       gameProvider.setIsLoading(value: false);
+          //       showSnackBar(context: context, content: error);
+          //     });
         }
       });
     }

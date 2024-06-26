@@ -12,7 +12,20 @@
           "package_name": "com.example.chessafg"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "6487545702-gicchiesj25s112nd7dadurk0gb4jq4p.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.chessafg",
+            "certificate_hash": "c29f82f29a218678c568235005315597cbe05df6"
+          }
+        },
+        {
+          "client_id": "6487545702-v1pfs96okffil31u1n47ahgko7rcacsd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyBMbuNWpKd41e7ajKv2shmLZucN_Wlfj-E"
@@ -20,7 +33,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "6487545702-v1pfs96okffil31u1n47ahgko7rcacsd.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "6487545702-fffnj61vv0icu3fbucpihvvkrh742htq.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.chessafg"
+              }
+            }
+          ]
         }
       }
     }

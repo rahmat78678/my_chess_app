@@ -1,5 +1,3 @@
-import 'package:chessafg/constants.dart';
-import 'package:chessafg/models/user_model.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -24,16 +22,6 @@ class NewsScreen extends StatelessWidget {
         'likes': FieldValue.arrayUnion([user!.uid])
       });
     }
-  }
-
-  void addComment(String newsId, String comment) async {
-    if (comment.isEmpty) return;
-
-    await FirebaseFirestore.instance.collection('news').doc(newsId).collection('comments').add({
-      'userId': user!.uid,
-      'comment': comment,
-      'timestamp': Timestamp.now(),
-    });
   }
 
   @override
@@ -112,22 +100,18 @@ class CommentSection extends StatefulWidget {
 class _CommentSectionState extends State<CommentSection> {
   final TextEditingController _commentController = TextEditingController();
 
-  void _postComment() {
-    if (_commentController.text.isNotEmpty) {
-      addComment(widget.newsId, _commentController.text);
-      _commentController.clear();
-    }
-  }
-
-  void addComment(String newsId, String comment) async {
+  void _postComment() async {
     User? user = FirebaseAuth.instance.currentUser;
-    if (user == null || comment.isEmpty) return;
+    if (user == null || _commentController.text.isEmpty) return;
 
-    await FirebaseFirestore.instance.collection('news').doc(newsId).collection('comments').add({
+    await FirebaseFirestore.instance.collection('news').doc(widget.newsId).collection('comments').add({
       'userId': user.uid,
-      'comment': comment,
+      'username': user.displayName ?? 'Anonymous',
+      'comment': _commentController.text,
       'timestamp': Timestamp.now(),
     });
+
+    _commentController.clear();
   }
 
   @override
@@ -146,38 +130,33 @@ class _CommentSectionState extends State<CommentSection> {
               physics: NeverScrollableScrollPhysics(),
               children: snapshot.data!.docs.map((doc) {
                 final Map<String, dynamic> data = doc.data()! as Map<String, dynamic>;
-                final String comment = data['comment'] ?? 'No Comment';
-                final String userId = data['userId'] ?? 'Anonymous';
-                final Timestamp timestamp = data['timestamp'] ?? Timestamp.now();
+                final String username = data['username'] ?? 'Anonymous';
+                final String comment = data['comment'] ?? '';
 
                 return ListTile(
-                  title: Text(comment),
-                  subtitle: Text('User: $userId'),
-                  trailing: Text(
-                    timestamp.toDate().toLocal().toString(),
-                    style: TextStyle(fontSize: 10),
-                  ),
+                  title: Text(username),
+                  subtitle: Text(comment),
                 );
               }).toList(),
             );
           },
         ),
-        Row(
-          children: [
-            Expanded(
-              child: TextField(
-                controller: _commentController,
-                decoration: InputDecoration(
-                  labelText: 'Add a comment...',
-                  border: OutlineInputBorder(),
+        Padding(
+          padding: EdgeInsets.all(8.0),
+          child: Row(
+            children: [
+              Expanded(
+                child: TextField(
+                  controller: _commentController,
+                  decoration: InputDecoration(labelText: 'Add a comment'),
                 ),
               ),
-            ),
-            IconButton(
-              icon: Icon(Icons.send),
-              onPressed: _postComment,
-            ),
-          ],
+              IconButton(
+                icon: Icon(Icons.send),
+                onPressed: _postComment,
+              ),
+            ],
+          ),
         ),
       ],
     );

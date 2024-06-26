@@ -6,11 +6,17 @@ class Constants {
   static const String aboutScreen = '/aboutScreen';
   static const String gameStartUpScreen = '/gameStartUpScreen';
   static const String gameTimeScreen = '/gameTimeScreen';
+  static const String settingsScreen = '/SettingsScreen';
   static const String loginScreen = '/loginScreen';
+  static const String changePasswordScreen = '/changePasswordScreen';
   static const String signUpScreen = '/signUpScreen';
   static const String homeScreenn = '/homeScreenn';
   static const String userInformationScreen = '/userInformationScreen';
   static const String fogotPasswordMialScreen = '/fogotPasswordMialScreen';
+  static const String authGate = '/authGate';
+  static  String userDataScreen = '/UserDataScreen()';
+  
+
 //  static const String previousGamesScreen = '/previousGamesScreen';
   
 
@@ -54,6 +60,10 @@ class Constants {
   static const String isGameOver = 'isGameOver';
   static const String squareState = 'squareState';
   static const String moves = 'moves';
+  static const String phoneNumber = 'phoneNumber';
+  static const String address = 'address';
+  static const String dateOfBirth = 'dateOfBirth';
+  static const String gender = 'gender';
 
   static const String runningGames = 'runningGames';
   static const String game = 'game';

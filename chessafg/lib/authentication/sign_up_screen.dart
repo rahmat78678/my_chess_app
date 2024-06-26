@@ -97,56 +97,122 @@ class _SignUpScreenState extends State<SignUpScreen> {
   }
 
   // signUp user
-  void signUpUser() async {
-    final authProvider = context.read<AuthenticationProvider>();
-    if (formKey.currentState!.validate()) {
-      // save the form
-      formKey.currentState!.save();
+   void signUpUser() async {
+  final authProvider = context.read<AuthenticationProvider>();
+  if (formKey.currentState!.validate()) {
+    formKey.currentState!.save();
 
-      UserCredential? userCredential =
-          await authProvider.createUserWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
+    UserCredential? userCredential =
+        await authProvider.createUserWithEmailAndPassword(
+      email: email,
+      password: password,
+    );
 
-      if (userCredential != null) {
-        // send email verification
+    if (userCredential != null) {
+      User? user = userCredential.user;
 
-        // user has been created - now we save the user to firestore
-        print('user crested: ${userCredential.user!.uid}');
+      if (user != null && !user.emailVerified) {
+        await user.sendEmailVerification();
 
-        UserModel userModel = UserModel(
-          uid: userCredential.user!.uid,
-          name: name,
-          email: email,
-          image: '',
-          createdAt: '',
-          playerRating: 1200,
-        );
-
-        authProvider.saveUserDataToFireStore(
-          currentUser: userModel,
-          fileImage: finalFileImage,
-          onSuccess: () async {
-            formKey.currentState!.reset();
-            // sign out the user and navigate to the login screen
-            // so that he may now sign In
-            showSnackBar(
-                context: context, content: 'Sign Up successful, Please Login');
-
-            await authProvider.signOutUser().whenComplete(() {
-              Navigator.pop(context);
-            });
-          },
-          onFail: (error) {
-            showSnackBar(context: context, content: error.toString());
-          },
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text("تأیید ایمیل"),
+            content: Text("ایمیل تأیید به ${user.email} ارسال شد. لطفاً ایمیل خود را تأیید کنید."),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text("باشه"),
+              ),
+            ],
+          ),
         );
       }
-    } else {
-      showSnackBar(context: context, content: 'Please fill all fields');
+
+      UserModel userModel = UserModel(
+        uid: userCredential.user!.uid,
+        name: name,
+        email: email,
+        image: '',
+        createdAt: '',
+        playerRating: 1200,
+      );
+
+      authProvider.saveUserDataToFireStore(
+        currentUser: userModel,
+        fileImage: finalFileImage,
+        onSuccess: () async {
+          formKey.currentState!.reset();
+          showSnackBar(context: context, content: 'ثبت‌نام موفقیت‌آمیز بود، لطفاً وارد شوید.');
+
+          await authProvider.signOutUser().whenComplete(() {
+            Navigator.pop(context);
+          });
+        },
+        onFail: (error) {
+          showSnackBar(context: context, content: error.toString());
+        },
+      );
     }
+  } else {
+    showSnackBar(context: context, content: 'لطفاً همه فیلدها را پر کنید');
   }
+}
+
+
+
+  // void signUpUser() async {
+  //   final authProvider = context.read<AuthenticationProvider>();
+  //   if (formKey.currentState!.validate()) {
+  //     // save the form
+  //     formKey.currentState!.save();
+
+  //     UserCredential? userCredential =
+  //         await authProvider.createUserWithEmailAndPassword(
+  //       email: email,
+  //       password: password,
+  //     );
+
+  //     if (userCredential != null) {
+  //       // send email verification
+
+  //       // user has been created - now we save the user to firestore
+  //       print('user crested: ${userCredential.user!.uid}');
+
+  //       UserModel userModel = UserModel(
+  //         uid: userCredential.user!.uid,
+  //         name: name,
+  //         email: email,
+  //         image: '',
+  //         createdAt: '',
+  //         playerRating: 1200,
+  //       );
+
+  //       authProvider.saveUserDataToFireStore(
+  //         currentUser: userModel,
+  //         fileImage: finalFileImage,
+  //         onSuccess: () async {
+  //           formKey.currentState!.reset();
+  //           // sign out the user and navigate to the login screen
+  //           // so that he may now sign In
+  //           showSnackBar(
+  //               context: context, content: 'Sign Up successful, Please Login');
+
+  //           await authProvider.signOutUser().whenComplete(() {
+  //             Navigator.pop(context);
+  //           });
+  //         },
+  //         onFail: (error) {
+  //           showSnackBar(context: context, content: error.toString());
+  //         },
+  //       );
+  //     }
+  //   } else {
+  //     showSnackBar(context: context, content: 'Please fill all fields');
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {

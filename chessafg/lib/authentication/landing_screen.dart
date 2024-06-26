@@ -2,9 +2,6 @@ import 'package:chessafg/constants.dart';
 import 'package:chessafg/provider/atuntication_provider.dart';
 import 'package:chessafg/service/assets_manager.dart';
 import 'package:flutter/material.dart';
-// import 'package:flutter_chess/constants.dart';
-// import 'package:flutter_chess/providers/authentication_provider.dart';
-// import 'package:flutter_chess/service/assets_manager.dart';
 import 'package:provider/provider.dart';
 
 class LandingScreen extends StatefulWidget {
@@ -52,7 +49,7 @@ class _LandingScreenState extends State<LandingScreen> {
     return Scaffold(
       body: Center(
         child: CircleAvatar(
-          radius: 50,
+          radius: 100,
           backgroundImage: AssetImage(AssetsManager.chessIcon),
         ),
       ),
