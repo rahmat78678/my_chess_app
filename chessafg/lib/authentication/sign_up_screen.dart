@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:chessafg/halper/halper_metods.dart';
 import 'package:chessafg/models/user_model.dart';
 import 'package:chessafg/provider/atuntication_provider.dart';
+import 'package:chessafg/provider/infomation/ThemeProvider.dart';
 import 'package:chessafg/service/assets_manager.dart';
 import 'package:chessafg/widgwts/main_auth_button.dart';
 import 'package:chessafg/widgwts/widgets.dart';
@@ -19,6 +20,7 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
+  
   File? finalFileImage;
   String fileImageUrl = '';
   late String name;
@@ -66,17 +68,40 @@ class _SignUpScreenState extends State<SignUpScreen> {
   }
 
   void showImagePickerDialog() {
+    final themeProvider = Provider.of<ThemeProvider>(context,listen: false);
     showDialog(
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: const Text('Select an Option'),
+            title: Text(
+              themeProvider.language == 'English'
+              ? 'Select an Option'
+              : themeProvider.language == 'فارسی'
+                  ? 'یک گزینه را انتخاب کنید'
+                  : themeProvider.language == 'پشتو'
+                  ? ' یو اختیار غوره کړئ '
+                  : themeProvider.language == 'German'
+                      ? 'Wähle eine Option'
+                      : 
+                      'Select an Option',
+              ),
             content: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
                 ListTile(
                   leading: const Icon(Icons.camera_alt),
-                  title: const Text("Camera"),
+                  title:  Text(
+                    themeProvider.language == 'English'
+              ? 'Camera'
+              : themeProvider.language == 'فارسی'
+                  ? 'دوربین'
+                  : themeProvider.language == 'پشتو'
+                  ? 'کیمره'
+                  : themeProvider.language == 'German'
+                      ? 'Kamera'
+                      :
+                       'Camera',
+                    ),
                   onTap: () {
                     // choose image from camera
                     selectImage(fromCamera: true);
@@ -84,7 +109,18 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 ),
                 ListTile(
                   leading: const Icon(Icons.image),
-                  title: const Text("Gallery"),
+                  title: Text(
+                    themeProvider.language == 'English'
+              ? 'Gallery'
+              : themeProvider.language == 'فارسی'
+                  ? 'آلبوم عکس'
+                  : themeProvider.language == 'پشتو'
+                  ? 'ګالری'
+                  : themeProvider.language == 'German'
+                      ? 'Galerie'
+                      : 
+                      'Gallery',
+                    ),
                   onTap: () {
                     // choose image from gallery
                     selectImage(fromCamera: false);
@@ -99,6 +135,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   // signUp user
    void signUpUser() async {
   final authProvider = context.read<AuthenticationProvider>();
+   final themeProvider = Provider.of<ThemeProvider>(context,listen: false);
   if (formKey.currentState!.validate()) {
     formKey.currentState!.save();
 
@@ -117,14 +154,46 @@ class _SignUpScreenState extends State<SignUpScreen> {
         showDialog(
           context: context,
           builder: (context) => AlertDialog(
-            title: Text("تأیید ایمیل"),
-            content: Text("ایمیل تأیید به ${user.email} ارسال شد. لطفاً ایمیل خود را تأیید کنید."),
+            title: Text(
+              themeProvider.language == 'English'
+              ? 'Email verification'
+              : themeProvider.language == 'فارسی'
+                  ? 'تأیید ایمیل'
+                  : themeProvider.language == 'پشتو'
+                  ? 'تأیید ایمیل'
+                  : themeProvider.language == 'German'
+                      ? 'Bestätigungsemail'
+                      :
+                       'Email verification',
+            )
+              ,
+            content: Text( 
+              themeProvider.language == 'English'
+              ? '"A verification email has been sent to ${user.email}. Please verify your email."'
+              : themeProvider.language == 'فارسی'
+                  ? "ایمیل تأیید به ${user.email} ارسال شد. لطفاً ایمیل خود را تأیید کنید."
+                  : themeProvider.language == 'پشتو'
+                  ? "${user.email} ته د تایید بریښنالیک لیږل شوی. مهرباني وکړئ خپل بریښنالیک تایید کړئ."
+                  : themeProvider.language == 'German'
+                      ? "Eine Bestätigungs-E-Mail wurde an ${user.email} gesendet. Bitte bestätigen Sie Ihre E-Mail."
+                      : 
+                      "A verification email has been sent to ${user.email}. Please verify your email.",),
             actions: [
               TextButton(
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
-                child: Text("باشه"),
+                child: Text(
+                  themeProvider.language == 'English'
+              ? 'OK'
+              : themeProvider.language == 'فارسی'
+                  ? 'قبول'
+                  : themeProvider.language == 'پشتو'
+                  ? ' منل کېدل'
+                  : themeProvider.language == 'German'
+                      ? 'OK'
+                      :
+                       'OK',),
               ),
             ],
           ),
@@ -145,7 +214,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
         fileImage: finalFileImage,
         onSuccess: () async {
           formKey.currentState!.reset();
-          showSnackBar(context: context, content: 'ثبت‌نام موفقیت‌آمیز بود، لطفاً وارد شوید.');
+          showSnackBar(context: context, content:
+          themeProvider.language == 'English'
+              ? 'Registration successful, please login.'
+              : themeProvider.language == 'فارسی'
+                  ? 'قبول'
+                  : themeProvider.language == 'پشتو'
+                  ? 'رجسټریشن بریالی شو، مهرباني وکړئ ننوتئ. '
+                  : themeProvider.language == 'German'
+                      ? 'Registrierung erfolgreich, bitte melden Sie sich an.'
+                      : 
+                      'Registration successful, please login.', );
 
           await authProvider.signOutUser().whenComplete(() {
             Navigator.pop(context);
@@ -157,66 +236,27 @@ class _SignUpScreenState extends State<SignUpScreen> {
       );
     }
   } else {
-    showSnackBar(context: context, content: 'لطفاً همه فیلدها را پر کنید');
+    showSnackBar(context: context, content: 
+    themeProvider.language == 'English'
+              ? 'Please fill in all fields'
+              : themeProvider.language == 'فارسی'
+                  ? 'لطفاً همه فیلدها را پر کنید'
+                  : themeProvider.language == 'پشتو'
+                  ? 'ترتیبات'
+                  : themeProvider.language == 'German'
+                      ? 'Bitte füllen Sie alle Felder aus'
+                      : 
+                      'Please fill in all fields',);
   }
 }
 
 
 
-  // void signUpUser() async {
-  //   final authProvider = context.read<AuthenticationProvider>();
-  //   if (formKey.currentState!.validate()) {
-  //     // save the form
-  //     formKey.currentState!.save();
-
-  //     UserCredential? userCredential =
-  //         await authProvider.createUserWithEmailAndPassword(
-  //       email: email,
-  //       password: password,
-  //     );
-
-  //     if (userCredential != null) {
-  //       // send email verification
-
-  //       // user has been created - now we save the user to firestore
-  //       print('user crested: ${userCredential.user!.uid}');
-
-  //       UserModel userModel = UserModel(
-  //         uid: userCredential.user!.uid,
-  //         name: name,
-  //         email: email,
-  //         image: '',
-  //         createdAt: '',
-  //         playerRating: 1200,
-  //       );
-
-  //       authProvider.saveUserDataToFireStore(
-  //         currentUser: userModel,
-  //         fileImage: finalFileImage,
-  //         onSuccess: () async {
-  //           formKey.currentState!.reset();
-  //           // sign out the user and navigate to the login screen
-  //           // so that he may now sign In
-  //           showSnackBar(
-  //               context: context, content: 'Sign Up successful, Please Login');
-
-  //           await authProvider.signOutUser().whenComplete(() {
-  //             Navigator.pop(context);
-  //           });
-  //         },
-  //         onFail: (error) {
-  //           showSnackBar(context: context, content: error.toString());
-  //         },
-  //       );
-  //     }
-  //   } else {
-  //     showSnackBar(context: context, content: 'Please fill all fields');
-  //   }
-  // }
 
   @override
   Widget build(BuildContext context) {
     final authProvider = context.watch<AuthenticationProvider>();
+     final themeProvider = Provider.of<ThemeProvider>(context);
     return Scaffold(
       body: Center(
           child: Padding(
@@ -231,8 +271,16 @@ class _SignUpScreenState extends State<SignUpScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                const Text(
-                  'Sign Up',
+                 Text(
+                  themeProvider.language == 'English'
+              ? 'Sign Up'
+              : themeProvider.language == 'فارسی'
+                  ? 'ثبت نام'
+                  : themeProvider.language == 'پشتو'
+                  ? 'ګډون کول '
+                  : themeProvider.language == 'German'
+                      ? 'Anmelden'
+                      : 'Sign Up',
                   style: TextStyle(fontSize: 34, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(
@@ -316,14 +364,46 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   maxLines: 1,
                   decoration: textFormDecoration.copyWith(
                     counterText: '',
-                    labelText: 'Enter your name',
-                    hintText: 'Enter your name',
+                    labelText: themeProvider.language == 'English'
+              ? 'Enter your name'
+              : themeProvider.language == 'فارسی'
+                  ? 'اسم تان را وارد کن'
+                  : themeProvider.language == 'پشتو'
+                  ? 'خپل نوم ولیکئ'
+                  : themeProvider.language == 'German'
+                      ? 'Gib deinen Namen ein'
+                      : 'Enter your name',
+                    hintText: themeProvider.language == 'English'
+              ? 'Enter your name'
+              : themeProvider.language == 'فارسی'
+                  ? 'اسم تان را وارد کن'
+                  : themeProvider.language == 'پشتو'
+                  ? 'خپل نوم ولیکئ'
+                  : themeProvider.language == 'German'
+                      ? 'Gib deinen Namen ein'
+                      : 'Enter your name',
                   ),
                   validator: (value) {
                     if (value!.isEmpty) {
-                      return 'Please enter your name';
+                      return themeProvider.language == 'English'
+              ? 'Enter your name'
+              : themeProvider.language == 'فارسی'
+                  ? 'اسم تان را وارد کن'
+                  : themeProvider.language == 'پشتو'
+                  ? 'خپل نوم ولیکئ'
+                  : themeProvider.language == 'German'
+                      ? 'Gib deinen Namen ein'
+                      : 'Enter your name';
                     } else if (value.length < 3) {
-                      return 'Name must be atleast 3 characters';
+                      return themeProvider.language == 'English'
+              ? 'Name must be atleast 3 characters'
+              : themeProvider.language == 'فارسی'
+                  ? 'نام باید حداقل 3 حروف باشد'
+                  : themeProvider.language == 'پشتو'
+                  ? 'نوم باید لږ تر لږه 3 حروف وي'
+                  : themeProvider.language == 'German'
+                      ? 'Der Name muss mindestens 3 Zeichen lang sein'
+                      : 'Name must be atleast 3 characters';
                     }
                     return null;
                   },
@@ -338,14 +418,46 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   textInputAction: TextInputAction.next,
                   maxLines: 1,
                   decoration: textFormDecoration.copyWith(
-                    labelText: 'Enter your email',
-                    hintText: 'Enter your email',
+                    labelText: themeProvider.language == 'English'
+              ? 'Enter your email'
+              : themeProvider.language == 'فارسی'
+                  ? ' ایمیل خود را وارد کنید'
+                  : themeProvider.language == 'پشتو'
+                  ? 'خپل بریښنالیک دننه کړئ'
+                  : themeProvider.language == 'German'
+                      ? 'Geben sie ihre E-Mail Adresse ein'
+                      : 'Enter your email'  ,
+                    hintText: themeProvider.language == 'English'
+              ? 'Enter your email'
+              : themeProvider.language == 'فارسی'
+                  ? ' ایمیل خود را وارد کنید'
+                  : themeProvider.language == 'پشتو'
+                  ? 'خپل بریښنالیک دننه کړئ'
+                  : themeProvider.language == 'German'
+                      ? 'Geben sie ihre E-Mail Adresse ein'
+                      : 'Enter your email'  ,
                   ),
                   validator: (value) {
                     if (value!.isEmpty) {
-                      return 'Please enter your email';
+                      return themeProvider.language == 'English'
+              ? 'Enter your email'
+              : themeProvider.language == 'فارسی'
+                  ? ' ایمیل خود را وارد کنید'
+                  : themeProvider.language == 'پشتو'
+                  ? 'خپل بریښنالیک دننه کړئ'
+                  : themeProvider.language == 'German'
+                      ? 'Geben sie ihre E-Mail Adresse ein'
+                      : 'Enter your email'  ;
                     } else if (!validateEmail(value)) {
-                      return 'Please enter a valid email';
+                      return themeProvider.language == 'English'
+              ? 'Please enter a valid email'
+              : themeProvider.language == 'فارسی'
+                  ? ' لطفا یک ایمیل معتبر وارد کنید'
+                  : themeProvider.language == 'پشتو'
+                  ? 'مهرباني وکړئ یو باوري بریښنالیک ولیکئ'
+                  : themeProvider.language == 'German'
+                      ? 'Bitte geben Sie eine gültige Email-Adresse ein'
+                      : 'Please enter a valid email';;
                     } else if (validateEmail(value)) {
                       return null;
                     }
@@ -361,8 +473,24 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 TextFormField(
                   textInputAction: TextInputAction.done,
                   decoration: textFormDecoration.copyWith(
-                    labelText: 'Enter your password',
-                    hintText: 'Enter your password',
+                    labelText: themeProvider.language == 'English'
+              ? 'Enter your password'
+              : themeProvider.language == 'فارسی'
+                  ? ' کلمه عبور خود را وارد کنید'
+                  : themeProvider.language == 'پشتو'
+                  ? 'خپل رمز دننه کړئ'
+                  : themeProvider.language == 'German'
+                      ? 'Geben sie ihre Passwort ein'
+                      : 'Enter your password',
+                    hintText: themeProvider.language == 'English'
+              ? 'Enter your password'
+              : themeProvider.language == 'فارسی'
+                  ? ' کلمه عبور خود را وارد کنید'
+                  : themeProvider.language == 'پشتو'
+                  ? 'خپل رمز دننه کړئ'
+                  : themeProvider.language == 'German'
+                      ? 'Geben sie ihre Passwort ein'
+                      : 'Enter your password',
                     suffixIcon: IconButton(
                       onPressed: () {
                         setState(() {
@@ -377,9 +505,25 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   obscureText: obscureText,
                   validator: (value) {
                     if (value!.isEmpty) {
-                      return 'Please enter a password';
+                      return themeProvider.language == 'English'
+              ? 'Enter your password'
+              : themeProvider.language == 'فارسی'
+                  ? ' کلمه عبور خود را وارد کنید'
+                  : themeProvider.language == 'پشتو'
+                  ? 'خپل رمز دننه کړئ'
+                  : themeProvider.language == 'German'
+                      ? 'Geben sie ihre Passwort ein'
+                      : 'Enter your password';
                     } else if (value.length < 8) {
-                      return 'Password must be atleast 8 characters';
+                      return themeProvider.language == 'English'
+              ? 'Password must be at least 8 characters long'
+              : themeProvider.language == 'فارسی'
+                  ? 'رمز عبور باید حداقل 8 کاراکتر باشد.'
+                  : themeProvider.language == 'پشتو'
+                  ? 'پاسورډ باید لږ تر لږه ۸ حروف اوږد وي'
+                  : themeProvider.language == 'German'
+                      ? 'Das Passwort muss mindestens 8 Zeichen lang sein.'
+                      : 'Password must be at least 8 characters long';
                     }
                     return null;
                   },
@@ -393,7 +537,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 authProvider.isLoading
                     ? const CircularProgressIndicator()
                     : MainAuthButton(
-                        lable: 'SIGN UP',
+                        lable: themeProvider.language == 'English'
+              ? 'Sign Up'
+              : themeProvider.language == 'فارسی'
+                  ? 'ثبت نام'
+                  : themeProvider.language == 'پشتو'
+                  ? 'ګډون کول '
+                  : themeProvider.language == 'German'
+                      ? 'Anmelden'
+                      : 'Sign Up',
                         onPressed: () {
                           // login the user with Email and password
                           signUpUser();
@@ -404,8 +556,24 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   height: 40,
                 ),
                 HaveAccountWidget(
-                  label: 'Have an account?',
-                  labelAction: 'Sign In',
+                  label: themeProvider.language == 'English'
+              ? ' Have an account?'
+              : themeProvider.language == 'فارسی'
+                  ? 'حساب  دارید؟'
+                  : themeProvider.language == 'پشتو'
+                  ? ' حساب  لرئ؟ '
+                  : themeProvider.language == 'German'
+                      ? 'Haben sie Konto?'
+                      : ' Have an account?',
+                  labelAction: themeProvider.language == 'English'
+              ? 'Sign In'
+              : themeProvider.language == 'فارسی'
+                  ? 'ورود'
+                  : themeProvider.language == 'پشتو'
+                  ?'ننوزئ'
+                  : themeProvider.language == 'German'
+                      ? 'Anmelden'
+                      : 'Sign In',
                   onPressed: () {
                     Navigator.pop(context);
                   },

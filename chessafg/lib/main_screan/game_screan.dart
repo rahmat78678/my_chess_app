@@ -6,6 +6,7 @@ import 'package:chessafg/halper/uci_commands.dart';
 import 'package:chessafg/models/user_model.dart';
 import 'package:chessafg/provider/atuntication_provider.dart';
 import 'package:chessafg/provider/game_provider.dart';
+import 'package:chessafg/provider/infomation/ThemeProvider.dart';
 import 'package:chessafg/service/assets_manager.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -17,7 +18,10 @@ import 'package:squares/squares.dart';
 //import 'package:stockfish/stockfish.dart';
 
 class GameScreen extends StatefulWidget {
-  const GameScreen({super.key});
+  const GameScreen({super.key
+  ,bool isCustomTime =true,
+  String gameTime='00:00:00'
+  });
 
   @override
   State<GameScreen> createState() => _GameScreenState();
@@ -292,6 +296,8 @@ class _GameScreenState extends State<GameScreen> {
 
   @override
   Widget build(BuildContext context) {
+      final themeProvider = Provider.of<ThemeProvider>(context,listen: false);
+
     final gameProvider = context.read<GameProvider>();
     final userModel = context.read<AuthenticationProvider>().userModel;
     return WillPopScope(
@@ -309,6 +315,7 @@ class _GameScreenState extends State<GameScreen> {
         return false;
       },
       child: Scaffold(
+        
         appBar: AppBar(
           // leading: IconButton(
           //   icon: const Icon(
@@ -320,9 +327,17 @@ class _GameScreenState extends State<GameScreen> {
           //     Navigator.pop(context);
           //   },
           // ),
-          backgroundColor: Colors.blue,
-          title: const Text(
-            'Flutter Chess',
+          backgroundColor: Colors.orange,
+          title:  Text(
+            themeProvider.language == 'English'
+              ? 'AFG Chess'
+              : themeProvider.language == 'فارسی'
+                  ? 'شطرنج افغانستان'
+                  : themeProvider.language == 'پشتو'
+                  ? 'د افغانستان شطرنج '
+                  : themeProvider.language == 'German'
+                      ? 'AFG Schach'
+                      : 'AFG Chess',
             style: TextStyle(color: Colors.white),
           ),
           actions: [
@@ -510,15 +525,34 @@ class _GameScreenState extends State<GameScreen> {
   }
 
   Future<bool?> _showExitConfirmDialog(BuildContext context) async {
+    final themeProvider = Provider.of<ThemeProvider>(context,listen: false);
     return showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text(
-          'Leave Game?',
+        title:  Text(themeProvider.language == 'English'
+              ? 'Leave Game?'
+              : themeProvider.language == 'فارسی'
+                  ? 'ترک بازی میکنید؟   '
+                  : themeProvider.language == 'پشتو'
+                  ? 'لوبه پریږده؟'
+                  : themeProvider.language == 'German'
+                      ? 'Spiel verlassen?'
+                      : 'Leave Game?',
+         
           textAlign: TextAlign.center,
         ),
-        content: const Text(
-          'Are you sure to leave this game?',
+        content: Text(
+          
+          themeProvider.language == 'English'
+              ? 'Are you sure to leave this game?'
+              : themeProvider.language == 'فارسی'
+                  ? 'آیا مطمئن هستید که این بازی را ترک می کنید؟'
+                  : themeProvider.language == 'پشتو'
+                  ? 'ایا تاسو ډاډه یاست چې دا لوبه پریږدئ؟'
+                  : themeProvider.language == 'German'
+                      ? 'Möchten Sie dieses Spiel wirklich verlassen?'
+                      : 'Are you sure to leave this game?',
+          
           textAlign: TextAlign.center,
         ),
         actions: [
@@ -526,13 +560,29 @@ class _GameScreenState extends State<GameScreen> {
             onPressed: () {
               Navigator.of(context).pop(false);
             },
-            child: const Text('Cancel'),
+            child:  Text(themeProvider.language == 'English'
+              ? 'Cancel'
+              : themeProvider.language == 'فارسی'
+                  ? 'لغو '
+                  : themeProvider.language == 'پشتو'
+                  ? 'لغوه '
+                  : themeProvider.language == 'German'
+                      ? 'Stornieren'
+                      : 'Cancel'),
           ),
           TextButton(
             onPressed: () {
               Navigator.of(context).pop(true);
             },
-            child: const Text('Yes'),
+            child:  Text(themeProvider.language == 'English'
+              ? 'Yes'
+              : themeProvider.language == 'فارسی'
+                  ? 'بلی'
+                  : themeProvider.language == 'پشتو'
+                  ? 'هو'
+                  : themeProvider.language == 'German'
+                      ? 'Ja'
+                      : 'Yes'),
           ),
         ],
       ),

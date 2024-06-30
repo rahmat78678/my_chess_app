@@ -2,11 +2,13 @@ import 'dart:async';
 import 'package:chessafg/halper/uci_commands.dart';
 import 'package:chessafg/models/game_model.dart';
 import 'package:chessafg/models/user_model.dart';
+import 'package:chessafg/provider/infomation/ThemeProvider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:chessafg/constants.dart';
 import 'package:flutter_stockfish_plugin/stockfish.dart';
+import 'package:provider/provider.dart';
 import 'package:squares/squares.dart';
 import 'package:bishop/bishop.dart' as bishop;
 import 'package:square_bishop/square_bishop.dart';
@@ -321,6 +323,7 @@ class GameProvider extends ChangeNotifier {
     required bool whiteWon,
     required Function onNewGame,
   }) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
     // stop stockfish engine
     if (stockfish != null) {
       stockfish.stdin = UCICommands.stop;
@@ -330,13 +333,34 @@ class GameProvider extends ChangeNotifier {
     int blacksSCoresToShow = 0;
 
     // check if its a timeOut
+    //final gameProvider = context.read<GameProvider>();
     if (timeOut) {
       // check who has won and increment the results accordingly
       if (whiteWon) {
-        resultsToShow = 'White won on time';
+        resultsToShow = themeProvider.language == 'English'
+              ? 'White won on time'
+              : themeProvider.language == 'فارسی'
+                  ? 'سفید با وقت پیروز شد'
+                  : themeProvider.language == 'پشتو'
+                  ? 'سپینه په وخت وګټله'
+                  : themeProvider.language == 'German'
+                      ? 'Weiß gewann auf Zeit'
+                      : 'White won on time';
+        //_userRating+5;
         whitesScoresToShow = _whitesScore + 1;
+        
+       //gameProvider.playerRating+5;
+        
       } else {
-        resultsToShow = 'Black won on time';
+        resultsToShow = themeProvider.language == 'English'
+              ? 'Black won on time'
+              : themeProvider.language == 'فارسی'
+                  ? 'سیاه با وقت پیروز شد'
+                  : themeProvider.language == 'پشتو'
+                  ? 'تور په وخت وګټله'
+                  : themeProvider.language == 'German'
+                      ? 'Schwarz gewann auf Zeit'
+                      : 'Black won on time';;
         blacksSCoresToShow = _blacksSCore + 1;
       }
     } else {

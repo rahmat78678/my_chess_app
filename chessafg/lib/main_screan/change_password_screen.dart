@@ -1,129 +1,3 @@
-// import 'package:flutter/material.dart';
-// import 'package:firebase_auth/firebase_auth.dart';
-
-// class ChangePasswordScreen extends StatefulWidget {
-//   @override
-//   _ChangePasswordScreenState createState() => _ChangePasswordScreenState();
-// }
-
-// class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
-//   final _formKey = GlobalKey<FormState>();
-//   final _oldPasswordController = TextEditingController();
-//   final _newPasswordController = TextEditingController();
-
-//   bool _isLoading = false;
-//   String? _errorMessage;
-
-//   Future<void> _changePassword() async {
-//     setState(() {
-//       _isLoading = true;
-//       _errorMessage = null;
-//     });
-
-//     final user = FirebaseAuth.instance.currentUser;
-//     if (user == null) {
-//       setState(() {
-//         _isLoading = false;
-//         _errorMessage = 'User not found';
-//       });
-//       return;
-//     }
-
-//     try {
-//       // Reauthenticate user
-//       final credential = EmailAuthProvider.credential(
-//         email: user.email!,
-//         password: _oldPasswordController.text,
-//       );
-
-//       await user.reauthenticateWithCredential(credential);
-
-//       // Change password
-//       await user.updatePassword(_newPasswordController.text);
-
-//       setState(() {
-//         _isLoading = false;
-//       });
-
-//       // Navigate back
-//       Navigator.of(context).pop();
-//       ScaffoldMessenger.of(context).showSnackBar(
-//         SnackBar(content: Text('Password changed successfully')),
-//       );
-//     } catch (e) {
-//       setState(() {
-//         _isLoading = false;
-//         _errorMessage = e.toString();
-//       });
-//     }
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: Text('Change Password'),
-//       ),
-//       body: Padding(
-//         padding: const EdgeInsets.all(16.0),
-//         child: Form(
-//           key: _formKey,
-//           child: Column(
-//             children: [
-//               TextFormField(
-//                 controller: _oldPasswordController,
-//                 decoration: InputDecoration(labelText: 'Old Password'),
-//                 obscureText: true,
-//                 validator: (value) {
-//                   if (value == null || value.isEmpty) {
-//                     return 'Please enter your old password';
-//                   }
-//                   return null;
-//                 },
-//               ),
-//               TextFormField(
-//                 controller: _newPasswordController,
-//                 decoration: InputDecoration(labelText: 'New Password'),
-//                 obscureText: true,
-//                 validator: (value) {
-//                   if (value == null || value.isEmpty) {
-//                     return 'Please enter your new password';
-//                   } else if (value.length < 6) {
-//                     return 'Password must be at least 6 characters';
-//                   }
-//                   return null;
-//                 },
-//               ),
-//               SizedBox(height: 20),
-//               _isLoading
-//                   ? CircularProgressIndicator()
-//                   : ElevatedButton(
-//                       onPressed: () {
-//                         if (_formKey.currentState?.validate() == true) {
-//                           _changePassword();
-//                         }
-//                       },
-//                       child: Text('Change Password'),
-//                     ),
-//               if (_errorMessage != null)
-//                 Padding(
-//                   padding: const EdgeInsets.only(top: 20.0),
-//                   child: Text(
-//                     _errorMessage!,
-//                     style: TextStyle(color: Colors.red),
-//                   ),
-//                 ),
-//             ],
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }
-
-
-
-
 
 import 'package:chessafg/provider/infomation/ThemeProvider.dart';
 import 'package:flutter/material.dart';
@@ -157,6 +31,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   }
 
   Future<void> _changePassword() async {
+    final themeProvider = Provider.of<ThemeProvider>(context, listen: false);
     setState(() {
       _isProcessing = true;
     });
@@ -165,8 +40,24 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
       // Ensure new password and confirm password match
       if (_newPasswordController.text != _confirmPasswordController.text) {
         throw FirebaseAuthException(
-          code: 'passwords-not-matching',
-          message: 'New password and confirm password do not match.',
+          code:themeProvider.language == 'English'
+              ? 'passwords-not-matching'
+              : themeProvider.language == 'فارسی'
+                  ? 'گذرواژه‌ها مطابقت ندارند'
+                  : themeProvider.language == 'پشتو'
+                  ? 'پاسورډونه - نه سمون خوري'
+                  : themeProvider.language == 'German'
+                      ? 'Passwörter stimmen nicht überein'
+                      : 'passwords-not-matching', 
+          message:themeProvider.language == 'English'
+              ? 'New password and confirm password do not match.'
+              : themeProvider.language == 'فارسی'
+                  ? 'رمز عبور جدید و رمز عبور تأیید مطابقت ندارند'
+                  : themeProvider.language == 'پشتو'
+                  ? 'نوی پټنوم او تایید پټنوم سره سمون نه خوري'
+                  : themeProvider.language == 'German'
+                      ? 'Neues Passwort und bestätigtes Passwort stimmen nicht überein'
+                      : 'New password and confirm password do not match.',
         );
       }
 
@@ -181,7 +72,15 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
 
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Password changed successfully.'),
+            content: Text( themeProvider.language == 'English'
+              ? 'Password changed successfully'
+              : themeProvider.language == 'فارسی'
+                  ? 'رمز عبور با موفقیت تغییر کرد'
+                  : themeProvider.language == 'پشتو'
+                  ? 'پټنوم په بریالیتوب سره بدل شو'
+                  : themeProvider.language == 'German'
+                      ? 'das Passwort wurde erfolgreich geändert'
+                      : 'Password changed successfully'),
             backgroundColor: Colors.green,
           ),
         );
@@ -192,8 +91,24 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
         _confirmPasswordController.clear();
       } else {
         throw FirebaseAuthException(
-          code: 'user-not-found',
-          message: 'No user found.',
+          code:themeProvider.language == 'English'
+              ? 'user-not-found'
+              : themeProvider.language == 'فارسی'
+                  ? 'کاربر پیدا نشد'
+                  : themeProvider.language == 'پشتو'
+                  ? 'کارن-نه موندل شوی'
+                  : themeProvider.language == 'German'
+                      ? 'Benutzer nicht gefunden'
+                      : 'user-not-found', 
+          message:themeProvider.language == 'English'
+              ? 'No user found.'
+              : themeProvider.language == 'فارسی'
+                  ? 'کاربری پیدا نشد'
+                  : themeProvider.language == 'پشتو'
+                  ? 'هیڅ کارن ونه موندل شو'
+                  : themeProvider.language == 'German'
+                      ? 'Kein Benutzer gefunden'
+                      : 'No user found.',
         );
       }
     } on FirebaseAuthException catch (e) {
@@ -209,9 +124,19 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context,listen: false);
     return Scaffold(
       appBar: AppBar(
-        title: Text('Change Password'),
+        backgroundColor: Colors.orange,
+        title: Text( themeProvider.language == 'English'
+              ? 'Change Password'
+              : themeProvider.language == 'فارسی'
+                  ? 'رمز عبور را تغییر دهید'
+                  : themeProvider.language == 'پشتو'
+                  ? 'پټ نوم بدل کړی'
+                  : themeProvider.language == 'German'
+                      ? 'Kennwort ändern'
+                      : 'Change Password'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -223,12 +148,28 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
               TextFormField(
                 controller: _oldPasswordController,
                 decoration: InputDecoration(
-                  labelText: 'Old Password',
+                  labelText:themeProvider.language == 'English'
+              ? 'Old Password'
+              : themeProvider.language == 'فارسی'
+                  ? 'رمز عبور قدیمی'
+                  : themeProvider.language == 'پشتو'
+                  ? 'زوړ پټ نوم'
+                  : themeProvider.language == 'German'
+                      ? 'Altes Passwort'
+                      : 'Old Password', 
                 ),
                 obscureText: true,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Please enter your old password.';
+                    return themeProvider.language == 'English'
+              ? 'Please enter your old password.'
+              : themeProvider.language == 'فارسی'
+                  ? 'لطفا رمز عبور قدیمی خود را وارد کنید.'
+                  : themeProvider.language == 'پشتو'
+                  ? 'مهرباني وکړئ خپل زوړ پټنوم دننه کړئ.'
+                  : themeProvider.language == 'German'
+                      ? 'Bitte geben Sie Ihr altes Passwort ein.'
+                      : 'Please enter your old password.' ;
                   }
                   return null;
                 },
@@ -237,12 +178,28 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
               TextFormField(
                 controller: _newPasswordController,
                 decoration: InputDecoration(
-                  labelText: 'New Password',
+                  labelText:themeProvider.language == 'English'
+              ? 'New Password'
+              : themeProvider.language == 'فارسی'
+                  ? 'رمز عبور جدید'
+                  : themeProvider.language == 'پشتو'
+                  ? 'نوئ پټ نوم'
+                  : themeProvider.language == 'German'
+                      ? 'Neues Kennwort'
+                      : 'New Password',
                 ),
                 obscureText: true,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Please enter a new password.';
+                    return themeProvider.language == 'English'
+              ? 'Please enter a new password.'
+              : themeProvider.language == 'فارسی'
+                  ? 'لطفا یک رمز عبور جدید وارد کنید.'
+                  : themeProvider.language == 'پشتو'
+                  ? 'مهرباني وکړئ یو نوی پټنوم دننه کړئ.'
+                  : themeProvider.language == 'German'
+                      ? 'Bitte geben Sie ein neues Passwort ein.'
+                      : 'Please enter a new password.' ;
                   }
                   return null;
                 },
@@ -251,14 +208,38 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
               TextFormField(
                 controller: _confirmPasswordController,
                 decoration: InputDecoration(
-                  labelText: 'Confirm Password',
+                  labelText: themeProvider.language == 'English'
+              ? 'Confirm Password'
+              : themeProvider.language == 'فارسی'
+                  ? 'رمز عبور را تایید کنید'
+                  : themeProvider.language == 'پشتو'
+                  ? 'پټنوم تایید کړئ'
+                  : themeProvider.language == 'German'
+                      ? 'Bestätige das Passwort'
+                      : 'Confirm Password',
                 ),
                 obscureText: true,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Please confirm your new password.';
+                    return themeProvider.language == 'English'
+              ? 'Please confirm your new password'
+              : themeProvider.language == 'فارسی'
+                  ? 'لطفا رمز عبور جدید خود را تایید کنید'
+                  : themeProvider.language == 'پشتو'
+                  ? 'مهرباني وکړئ خپل نوی پټنوم تایید کړئ'
+                  : themeProvider.language == 'German'
+                      ? 'Bitte bestätigen Sie Ihr neues Passwort'
+                      : 'Please confirm your new password';
                   } else if (value != _newPasswordController.text) {
-                    return 'Passwords do not match.';
+                    return themeProvider.language == 'English'
+              ? 'Passwords do not match'
+              : themeProvider.language == 'فارسی'
+                  ? 'رمزهای ورود مطابقت ندارند'
+                  : themeProvider.language == 'پشتو'
+                  ? 'پاسورډونه سمون نه خوري'
+                  : themeProvider.language == 'German'
+                      ? 'Passwörter stimmen nicht überein'
+                      : 'Passwords do not match';
                   }
                   return null;
                 },
@@ -276,7 +257,15 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                 onPressed: _isProcessing ? null : _changePassword,
                 child: _isProcessing
                     ? CircularProgressIndicator()
-                    : Text('Change Password'),
+                    : Text(themeProvider.language == 'English'
+              ? 'Change Password'
+              : themeProvider.language == 'فارسی'
+                  ? 'رمز عبور را تغییر دهید'
+                  : themeProvider.language == 'پشتو'
+                  ? ' پټ نوم بدل کړی'
+                  : themeProvider.language == 'German'
+                      ? 'Kennwort ändern'
+                      : 'Change Password'),
               ),
             ],
           ),

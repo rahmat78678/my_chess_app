@@ -10,6 +10,7 @@ import 'package:chessafg/models/user_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthenticationProvider extends ChangeNotifier {
+  
   bool _isLoading = false;
   bool _isSignedIn = false;
   String? _uid;
@@ -30,30 +31,19 @@ class AuthenticationProvider extends ChangeNotifier {
   final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
   final FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
   final FirebaseStorage firebaseStorage = FirebaseStorage.instance;
+  
 
-  // create user with email and password
-  // Future<UserCredential?> createUserWithEmailAndPassword({
-  //   required String email,
-  //   required String password,
-  // }) async {
-  //   _isLoading = true;
-  //   notifyListeners();
-  //   UserCredential userCredential = await firebaseAuth
-  //       .createUserWithEmailAndPassword(email: email, password: password);
-  //   _uid = userCredential.user!.uid;
-  //   notifyListeners();
-
-  //   return userCredential;
-  // }
 
   Future<UserCredential?> createUserWithEmailAndPassword({
   required String email,
   required String password,
 }) async {
+  
   _isLoading = true;
   notifyListeners();
 
   try {
+    
     UserCredential userCredential = await firebaseAuth
         .createUserWithEmailAndPassword(email: email, password: password);
     _uid = userCredential.user!.uid;
@@ -61,6 +51,7 @@ class AuthenticationProvider extends ChangeNotifier {
     return userCredential;
   } on FirebaseAuthException catch (e) {
     if (e.code == 'email-already-in-use') {
+      
       // Handle the specific error for email already in use
       print('The email address is already in use by another account.');
     } else {
@@ -136,18 +127,6 @@ Future<UserCredential?> signInUserWithEmailAndPassword({
   }
   return false;
 }
-  
-  // Future<bool> checkUserExist() async {
-  //   DocumentSnapshot documentSnapshot =
-  //       await firebaseFirestore.collection(Constants.users).doc(uid).get();
-
-  //   if (documentSnapshot.exists) {
-  //     return true;
-  //   } else {
-  //     return false;
-  //   }
-  // }
-
   // get user data from firestore
   Future getUserDataFromFireStore() async {
     await firebaseFirestore

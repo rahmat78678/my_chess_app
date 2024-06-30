@@ -11,15 +11,16 @@ class SettingsScreen extends StatelessWidget {
     final themeProvider = Provider.of<ThemeProvider>(context);
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.orange,
         title: Text(themeProvider.language == 'English'
-              ? 'Sittings'
+              ? 'Settings'
               : themeProvider.language == 'فارسی'
                   ? 'تنظیمات'
                   : themeProvider.language == 'پشتو'
-                  ? 'ژبه'
+                  ? 'ترتیبات'
                   : themeProvider.language == 'German'
                       ? 'Einstellungen'
-                      : 'Sittings', // Default fallback'
+                      : 'Settings', // Default fallback'
                       ),
       ),
       body: Consumer<ThemeProvider>(
@@ -152,7 +153,7 @@ class SettingsScreen extends StatelessWidget {
                               children: [
                                 DropdownButton<String>(
                                   value: newLang,
-                                  items: ['English', 'فارسی', 'German','پشتو']
+                                  items: ['English', 'فارسی', 'پشتو','German']
                                       .map((lang) => DropdownMenuItem<String>(
                                             value: lang,
                                             child: Text(lang),

@@ -49,7 +49,7 @@ class _LandingScreenState extends State<LandingScreen> {
     return Scaffold(
       body: Center(
         child: CircleAvatar(
-          radius: 100,
+          radius: 200,
           backgroundImage: AssetImage(AssetsManager.chessIcon),
         ),
       ),

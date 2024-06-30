@@ -2,6 +2,7 @@ import 'package:chessafg/constants.dart';
 import 'package:chessafg/halper/halper_metods.dart';
 import 'package:chessafg/main_screan/game_start_up_screan.dart';
 import 'package:chessafg/provider/game_provider.dart';
+import 'package:chessafg/provider/infomation/ThemeProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -16,13 +17,22 @@ class _GameTimeScreenState extends State<GameTimeScreen> {
   @override
   Widget build(BuildContext context) {
     final gameProvider = context.read<GameProvider>();
+    final themeProvider = Provider.of<ThemeProvider>(context);
 
     print('VS VALUE: ${gameProvider.vsComputer}');
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.blue,
-        title: const Text(
-          'Choose Game time',
+        backgroundColor: Colors.orange,
+        title: Text(themeProvider.language == 'English'
+              ? 'Choose Game time'
+              : themeProvider.language == 'فارسی'
+                  ? 'زمان بازی را انتخاب کنید'
+                  : themeProvider.language == 'پشتو'
+                  ? 'د لوبې وخت وټاکئ'
+                  : themeProvider.language == 'German'
+                      ? 'Spielzeit wählen'
+                      : 'Choose Game time',
+          
           style: TextStyle(color: Colors.white),
         ),
         leading: IconButton(
@@ -80,6 +90,6 @@ class _GameTimeScreenState extends State<GameTimeScreen> {
             }),
       ),
     );
-    ;
+    
   }
 }
